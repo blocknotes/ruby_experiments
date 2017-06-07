@@ -1,5 +1,3 @@
-# require 'pry'
-
 class Chain
   attr_accessor :ref, :val
 
@@ -17,11 +15,11 @@ class Chain
   end
 end
 
-class A
+class Test
   def self.fun1( *args )
     ( chain = ( args[0] && args[0].is_a?( Chain ) ) ? args.shift : Chain.new( self ) ).set( __method__, args ) # chain init
 
-    puts '> fun1', args[0] ? args[0] : nil
+    puts '> fun1: ' + args.map( &:to_s ).join( ', ' )
 
     chain
   end
@@ -29,7 +27,7 @@ class A
   def self.fun2( *args )
     ( chain = ( args[0] && args[0].is_a?( Chain ) ) ? args.shift : Chain.new( self ) ).set( __method__, args ) # chain init
 
-    puts '> fun2', args[0] ? args[0] : nil
+    puts '> fun2: ' + args.map( &:to_s ).join( ', ' )
 
     chain
   end
@@ -37,12 +35,12 @@ class A
   def self.all( *args )
     ret = ( args[0] && args[0].is_a?( Chain ) ) ? args.shift : false
 
-    puts '> all', ret.val, "\n"
+    puts '> all: ' + ret.val.to_s + "\n"
 
     nil
   end
 end
 
-A.fun1( 2, 4, 6 ).fun2( 3, 1 ).all()
-
-A.fun2( 3 ).fun1().all()
+Test.fun1( 2, 4, 6 ).fun2( 3, 1 ).all()
+puts ' '
+Test.fun2( 3 ).fun1().all()
