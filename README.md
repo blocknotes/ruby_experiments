@@ -1,5 +1,5 @@
-# Ruby examples
+# Ruby by examples
 
-My collection of Ruby examples.
+A collection of common/uncommon tasks/examples in Ruby.
 
 See folders.
