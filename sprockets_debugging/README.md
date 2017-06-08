@@ -8,7 +8,7 @@ Here are some useful hints:
 
 ```sh
 # Compile assets for a specific env
-bundle exec rake tmp:clear assets:clean assets:precompile RAILS_ENV=staging
+bundle exec rake tmp:clear assets:clean assets:precompile RAILS_ENV=production
 ```
 
 ```ruby
