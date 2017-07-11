@@ -1,4 +1,4 @@
-# rails_static_site_generator
+# Rails static site generator
 
 The last week-end I decided to try to staticize a Rails website without external dependecies, a sort of fullpage cache.
 
