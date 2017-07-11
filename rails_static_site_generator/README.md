@@ -1,6 +1,6 @@
 # rails_static_site_generator
 
-The last week-end I decided to try to staticize a Rails website.
+The last week-end I decided to try to staticize a Rails website without external dependecies, a sort of fullpage cache.
 
 Here you can find a task to do it: `rake static:generate`
 
