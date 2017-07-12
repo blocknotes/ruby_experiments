@@ -7,19 +7,14 @@ PATHS = {
   'new_page' => false,
   'page'  => Proc.new { Page.all.map { |page| {id: page.id} } }, # record ids to fetch for this path
 }
-OUT_PATH = Rails.root.join( 'public' ).to_s
+OUT_PATH = Rails.root.join( 'out' ).to_s
 # ------------------------------------------------------------------------------
-
-app = ActionDispatch::Integration::Session.new Rails.application
-app.get '/' # necessary for init
-
-include Rails.application.routes.url_helpers # route helpers
 
 def staticize( path_rel, body )
   path = OUT_PATH + path_rel
   FileUtils.mkdir_p path
-  pathname = Pathname.new( path )
-  File.open( pathname.join( 'index.html' ), 'w' ) do |file|
+  pathname = Pathname.new( path ).join( 'index.html' )
+  File.open( pathname, 'w' ) do |file|
     file.puts body
   end
 end
@@ -38,6 +33,7 @@ namespace :static do
   task :generate_all, [:only] => :environment do |t, args|
     only = args[:only] ? args[:only] : false
     ignore = %w(rails_info_properties rails_info_routes rails_info rails_mailers)
+    app = ActionDispatch::Integration::Session.new Rails.application
     Rails.application.routes.routes.each do |route|
       next if route.verb != 'GET' || route.name.nil? # consider GET routes
       paths = only ? {"#{only}" => PATHS[only]} : PATHS # filter paths if required
@@ -48,12 +44,12 @@ namespace :static do
         # paths could be used also to generate a sitemap
         if paths[route.name]
           paths[route.name].call.each do |params|
-            path = eval( route.name + "_path( #{params} )" )
+            path = eval( "Rails.application.routes.url_helpers.#{route.name}_path( #{params} )" )
             # make_request path
             staticize path, app.body if app.get( path ) == 200
           end
         else
-          path = eval( route.name + '_path' )
+          path = eval( "Rails.application.routes.url_helpers.#{route.name}_path" )
           # make_request path
           staticize path, app.body if app.get( path ) == 200
         end
