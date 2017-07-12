@@ -22,7 +22,7 @@ class Page < ApplicationRecord
 
   def staticize
     Rails.application.load_tasks
-    ::Rake::Task['static:generate'].invoke( 'page', 'id', self.id )
+    Rake::Task['static:generate'].invoke( 'page', 'id', self.id )
   end
 end
 ```
