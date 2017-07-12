@@ -31,3 +31,4 @@ end
 
 - Get CSRF token via AJAX?
 - Get flashes via AJAX?
+- Use websockets instead?
