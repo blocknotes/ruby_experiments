@@ -2,9 +2,9 @@ require_relative '../../config/environment.rb' # init rails app
 
 # --- conf ---------------------------------------------------------------------
 PATHS = {
-  'root'  => [],
-  'pages' => [],
-  'page'  => Page.all.map { |page| {id: page.id} }, # record ids to fetch for this path
+  'root'  => false,
+  'pages' => false,
+  'page'  => Proc.new { Page.all.map { |page| {id: page.id} } }, # record ids to fetch for this path
 }
 OUT_PATH = Rails.root.join( 'public' ).to_s
 # ------------------------------------------------------------------------------
@@ -49,16 +49,16 @@ namespace :static do
         parts = route.parts.dup
         parts.delete :format
         # paths could be used also to generate a sitemap
-        if paths[route.name].empty?
-          path = eval( route.name + '_path' )
-          # make_request path
-          app.get path
-        else
-          paths[route.name].each do |params|
+        if paths[route.name]
+          paths[route.name].call.each do |params|
             path = eval( route.name + "_path( #{params} )" )
             # make_request path
             app.get path
           end
+        else
+          path = eval( route.name + '_path' )
+          # make_request path
+          app.get path
         end
       elsif !ignore.include?( route.name ) && !route.path.spec.to_s.starts_with?( '/rails/' ) # ignore rails dev routes
         puts '- Skip ' + ( route.name ? route.name : '' ) + ' => ' + route.path.spec.to_s
