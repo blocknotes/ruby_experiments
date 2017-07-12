@@ -19,16 +19,6 @@ def staticize( path_rel, body )
   end
 end
 
-## Another way: making requests
-# HOST = 'localhost'
-# PORT = 3000
-# def make_request( path )
-#   req = Net::HTTP::Get.new( path )
-#   res = Net::HTTP.start( HOST, PORT ) do |http|
-#     http.request( req )
-#   end
-# end
-
 namespace :static do
   task :generate_all, [:only] => :environment do |t, args|
     only = args[:only] ? args[:only] : false
@@ -61,14 +51,13 @@ namespace :static do
 
   task :generate, [:route, :key, :id] => :environment do |t, args|
     if args[:route] && args[:key] && args[:id]
+      app = ActionDispatch::Integration::Session.new Rails.application
       route = args[:route]
       key = args[:key]
       id = args[:id]
-      # p route, key, id
       if PATHS[route]
-        path = eval( route + "_path( #{key}: #{id} )" )
-        app.get path
-        puts path
+        path = eval( "Rails.application.routes.url_helpers.#{route}_path( #{key}: #{id} )" )
+        staticize path, app.body if app.get( path ) == 200
       end
     end
   end
