@@ -8,7 +8,7 @@ The last week-end I decided to try to staticize a Rails website without external
 
 - Generate a single resource: `rake static:generate[page,id,2]`
 
-It could also be expandend to generate the sitemap (with a gem like *xml-sitemap*)
+It could also be expanded to generate the sitemap (with a gem like *xml-sitemap*)
 
 ## Update after model saving
 
