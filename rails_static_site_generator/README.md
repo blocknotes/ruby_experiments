@@ -26,3 +26,8 @@ class Page < ApplicationRecord
   end
 end
 ```
+
+## What's next?
+
+- Get CSRF token via AJAX?
+- Get flashes via AJAX?
