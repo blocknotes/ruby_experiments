@@ -1,6 +1,6 @@
 # Rails static site generator
 
-The last week-end I decided to try to staticize a Rails website without external dependecies, a sort of fullpage cache.
+The last week-end I decided to try to staticize a Rails website without external dependecies, a sort of fullpage cache. Here you find a task to do it.
 
 - Generate all configured routes: `rake static:generate_all`
 
