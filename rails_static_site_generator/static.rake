@@ -38,7 +38,7 @@ end
 # end
 
 namespace :static do
-  task :generate, [:only] => :environment do |t, args|
+  task :generate_all, [:only] => :environment do |t, args|
     only = args[:only] ? args[:only] : false
     ignore = %w(rails_info_properties rails_info_routes rails_info rails_mailers)
     Rails.application.routes.routes.each do |route|
@@ -62,6 +62,20 @@ namespace :static do
         end
       elsif !ignore.include?( route.name ) && !route.path.spec.to_s.starts_with?( '/rails/' ) # ignore rails dev routes
         puts '- Skip ' + ( route.name ? route.name : '' ) + ' => ' + route.path.spec.to_s
+      end
+    end
+  end
+
+  task :generate, [:route, :key, :id] => :environment do |t, args|
+    if args[:route] && args[:key] && args[:id]
+      route = args[:route]
+      key = args[:key]
+      id = args[:id]
+      # p route, key, id
+      if PATHS[route]
+        path = eval( route + "_path( #{key}: #{id} )" )
+        app.get path
+        puts path
       end
     end
   end
