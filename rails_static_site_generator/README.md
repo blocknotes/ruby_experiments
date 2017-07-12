@@ -3,9 +3,7 @@
 The last week-end I decided to try to staticize a Rails website without external dependecies, a sort of fullpage cache. Here you find a task to do it.
 
 - Generate all configured routes: `rake static:generate_all`
-
 - Generate only a specific route: `rake static:generate_all[page]`
-
 - Generate a single resource: `rake static:generate[page,id,2]`
 
 ## Update after model saving
