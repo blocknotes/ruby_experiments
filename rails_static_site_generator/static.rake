@@ -4,6 +4,7 @@ require_relative '../../config/environment.rb' # init rails app
 PATHS = {
   'root'  => false,
   'pages' => false,
+  'new_page' => false,
   'page'  => Proc.new { Page.all.map { |page| {id: page.id} } }, # record ids to fetch for this path
 }
 OUT_PATH = Rails.root.join( 'public' ).to_s
@@ -14,16 +15,12 @@ app.get '/' # necessary for init
 
 include Rails.application.routes.url_helpers # route helpers
 
-ApplicationController.class_eval do
-  after_action :staticize
-
-  def staticize # write rails output to file
-    path = OUT_PATH + request.env['PATH_INFO']
-    FileUtils.mkdir_p path
-    pathname = Pathname.new( path )
-    File.open( pathname.join( 'index.html' ), 'w' ) do |file|
-      file.puts response.body
-    end
+def staticize( path_rel, body )
+  path = OUT_PATH + path_rel
+  FileUtils.mkdir_p path
+  pathname = Pathname.new( path )
+  File.open( pathname.join( 'index.html' ), 'w' ) do |file|
+    file.puts body
   end
 end
 
@@ -53,12 +50,12 @@ namespace :static do
           paths[route.name].call.each do |params|
             path = eval( route.name + "_path( #{params} )" )
             # make_request path
-            app.get path
+            staticize path, app.body if app.get( path ) == 200
           end
         else
           path = eval( route.name + '_path' )
           # make_request path
-          app.get path
+          staticize path, app.body if app.get( path ) == 200
         end
       elsif !ignore.include?( route.name ) && !route.path.spec.to_s.starts_with?( '/rails/' ) # ignore rails dev routes
         puts '- Skip ' + ( route.name ? route.name : '' ) + ' => ' + route.path.spec.to_s
