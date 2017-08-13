@@ -1,6 +1,6 @@
-# Ruby by examples
+# Ruby experiments
 
-A collection of common/uncommon Ruby examples/tasks that I found useful.
+Some small experiments with Ruby / Rails.
 
 See folders.
 
